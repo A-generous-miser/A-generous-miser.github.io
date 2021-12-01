@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>新文章</title>
+    <url>/2021/11/26/%E6%96%B0%E6%96%87%E7%AB%A0/</url>
+    <content><![CDATA[<p>新文章</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>ctf</tag>
+        <tag>分享</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
-    <url>/A-generous-miser/A-generous-miser.github.io/2021/11/26/hello-world/</url>
+    <url>/2021/11/26/hello-world/</url>
     <content><![CDATA[<span id="more"></span>
 
 
@@ -20,18 +33,5 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>新文章</title>
-    <url>/A-generous-miser/A-generous-miser.github.io/2021/11/26/%E6%96%B0%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p>新文章</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>ctf</tag>
-        <tag>分享</tag>
-      </tags>
   </entry>
 </search>
